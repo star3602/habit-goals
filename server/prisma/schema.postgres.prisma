@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password_hash String
+  created_at    DateTime  @default(now())
+  goals         Goal[]
+  checkins      Checkin[]
+}
+
+model Goal {
+  id          String    @id @default(cuid())
+  user_id     String
+  title       String
+  description String?
+  created_at  DateTime  @default(now())
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  checkins    Checkin[]
+
+  @@index([user_id])
+}
+
+model Checkin {
+  id         String   @id @default(cuid())
+  goal_id    String
+  user_id    String
+  date       String
+  created_at DateTime @default(now())
+  goal       Goal     @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([goal_id, user_id, date])
+  @@index([user_id])
+  @@index([goal_id])
+}
