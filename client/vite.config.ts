@@ -10,5 +10,12 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  preview: {
+    host: "0.0.0.0",
+    allowedHosts: [
+      "glorious-warmth-production-6cda.up.railway.app",
+      ".up.railway.app"
+    ]
   }
 });
